@@ -37,41 +37,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var promises_1 = require("node:fs/promises");
-function read(dir) {
-    return __awaiter(this, void 0, void 0, function () {
-        var files, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, (0, promises_1.readdir)(dir)];
-                case 1:
-                    files = _a.sent();
-                    return [2 /*return*/, files];
-                case 2:
-                    err_1 = _a.sent();
-                    console.error(err_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
+var HtmlFileFinder = /** @class */ (function () {
+    function HtmlFileFinder() {
+    }
+    HtmlFileFinder.prototype.read = function (dir) {
+        return __awaiter(this, void 0, void 0, function () {
+            var files, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, (0, promises_1.readdir)(dir)];
+                    case 1:
+                        files = _a.sent();
+                        return [2 /*return*/, files];
+                    case 2:
+                        err_1 = _a.sent();
+                        console.error(err_1);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-function generate() {
-    return __awaiter(this, void 0, void 0, function () {
-        var files, _i, files_1, file;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, read('..')];
-                case 1:
-                    files = _a.sent();
-                    for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
-                        file = files_1[_i];
-                        console.log(file);
-                    }
-                    return [2 /*return*/];
-            }
+    };
+    HtmlFileFinder.prototype.find = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var files, _i, files_1, file;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.read('..')];
+                    case 1:
+                        files = _a.sent();
+                        for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
+                            file = files_1[_i];
+                            console.log(file);
+                        }
+                        return [2 /*return*/];
+                }
+            });
         });
-    });
-}
-generate();
+    };
+    return HtmlFileFinder;
+}());
+var IndexWriter = /** @class */ (function () {
+    function IndexWriter() {
+    }
+    return IndexWriter;
+}());
+var finder = new HtmlFileFinder();
+finder.find();

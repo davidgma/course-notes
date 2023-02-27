@@ -1,23 +1,24 @@
 import { readdir } from 'node:fs/promises';
 
-async function read(dir: string): Promise<string[]> {
-  try {
-    const files = await readdir(dir);
-    return files;
-  } catch (err) {
-    console.error(err);
+class HtmlFileFinder {
+  async read(dir: string): Promise<string[]> {
+    try {
+      const files = await readdir(dir);
+      return files;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async find() {
+    let files = await this.read('..');
+    for (const file of files) {
+      console.log(file);
+    }
   }
 }
 
-async function generate() {
-  let files = await read('..');
-  for (const file of files) {
-    console.log(file);
-  }
-}
+class IndexWriter {}
 
-class IndexWriter {
-  
-}
-
-generate();
+let finder = new HtmlFileFinder();
+finder.find();
