@@ -44,6 +44,12 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 };
 exports.__esModule = true;
 var promises_1 = require("node:fs/promises");
+var LinkNode = /** @class */ (function () {
+    function LinkNode(name) {
+        this.name = name;
+    }
+    return LinkNode;
+}());
 var HtmlFileFinder = /** @class */ (function () {
     function HtmlFileFinder() {
     }
@@ -76,9 +82,8 @@ var HtmlFileFinder = /** @class */ (function () {
                         _g.trys.push([6, , 9, 10]);
                         dirent = _c;
                         path = startDir + '/' + dirent.name;
-                        // console.log(path);
                         if (dirent.name.endsWith('.html')) {
-                            files.push(path);
+                            files.push(new LinkNode(path));
                         }
                         if (!(dirent.isDirectory() && dirent.name != 'node_modules')) return [3 /*break*/, 8];
                         subDir = startDir + '/' + dirent.name;
@@ -138,12 +143,12 @@ var IndexWriter = /** @class */ (function () {
     }
     IndexWriter.prototype.write = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var files, _i, files_1, file, output, _a, files_2, file;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var files, _i, files_1, file, output, _a, _b, line;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0: return [4 /*yield*/, this.finder.find()];
                     case 1:
-                        files = _b.sent();
+                        files = _c.sent();
                         for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
                             file = files_1[_i];
                             console.log(file);
@@ -156,29 +161,47 @@ var IndexWriter = /** @class */ (function () {
                         output.push('    <meta http-equiv="X-UA-Compatible" content="IE=edge" />');
                         output.push('    <meta name="viewport" content="width=device-width, initial-scale=1.0" />');
                         output.push('    <title>Course Notes</title>');
+                        output.push('<style>');
+                        output.push('    * {');
+                        output.push('      box-sizing: border-box;');
+                        output.push('    }');
+                        output.push('    .link {');
+                        output.push('    text-decoration: none;');
+                        output.push('    }');
+                        output.push('');
+                        output.push('</style>');
                         output.push('  </head>');
                         output.push('  <body>');
-                        for (_a = 0, files_2 = files; _a < files_2.length; _a++) {
-                            file = files_2[_a];
-                            output.push('<p><a href="' + file + '" class="link">' + file + '</a><p>');
+                        for (_a = 0, _b = this.generateList(files); _a < _b.length; _a++) {
+                            line = _b[_a];
+                            output.push(line);
                         }
                         output.push('    hello2');
                         output.push('  </body>');
                         output.push('</html>');
-                        console.log(output);
+                        //console.log(output);
                         // Write to the index.html file
                         //const indexFH = await open('../index.html');
                         //await indexFH.writeFile(output.join(''));
                         return [4 /*yield*/, (0, promises_1.writeFile)('../index.html', output.join('\n'))];
                     case 2:
+                        //console.log(output);
                         // Write to the index.html file
                         //const indexFH = await open('../index.html');
                         //await indexFH.writeFile(output.join(''));
-                        _b.sent();
+                        _c.sent();
                         return [2 /*return*/];
                 }
             });
         });
+    };
+    IndexWriter.prototype.generateList = function (nodes) {
+        var result = new Array();
+        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+            var node = nodes_1[_i];
+            result.push('<p><a href="' + node.name + '" class="link">' + node.name + '</a><p>');
+        }
+        return result;
     };
     return IndexWriter;
 }());

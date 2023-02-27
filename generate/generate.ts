@@ -1,15 +1,25 @@
 import { open, opendir, writeFile } from 'node:fs/promises';
 
+class LinkNode {
+  public name: string;
+  public parent: LinkNode;
+  public children: Array<LinkNode>;
+  public link: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+
 class HtmlFileFinder {
-  private async read(startDir: string): Promise<string[]> {
-    let files: string[] = new Array<string>();
+  private async read(startDir: string): Promise<LinkNode[]> {
+    let files: LinkNode[] = new Array<LinkNode>();
     try {
       const dir = await opendir(startDir);
       for await (const dirent of dir) {
         const path = startDir + '/' + dirent.name;
-        // console.log(path);
         if (dirent.name.endsWith('.html')) {
-          files.push(path);
+          files.push(new LinkNode(path));
         }
 
         if (dirent.isDirectory() && dirent.name != 'node_modules') {
@@ -24,7 +34,7 @@ class HtmlFileFinder {
     return files;
   }
 
-  async find(): Promise<string[]> {
+  async find(): Promise<LinkNode[]> {
     return await this.read('..');
   }
 }
@@ -50,23 +60,42 @@ class IndexWriter {
       '    <meta name="viewport" content="width=device-width, initial-scale=1.0" />'
     );
     output.push('    <title>Course Notes</title>');
+    output.push('<style>');
+    output.push('    * {');
+    output.push('      box-sizing: border-box;');
+    output.push('    }');
+    output.push('    .link {');
+    output.push('    text-decoration: none;');
+    output.push('    }');
+    output.push('');
+    output.push('</style>');
     output.push('  </head>');
     output.push('  <body>');
 
-    for (const file of files) {
-      output.push('<p><a href="' + file + '" class="link">' + file + '</a><p>');
+    for (let line of this.generateList(files)) {
+      output.push(line);
     }
 
     output.push('    hello2');
     output.push('  </body>');
     output.push('</html>');
 
-    console.log(output);
+    //console.log(output);
 
     // Write to the index.html file
     //const indexFH = await open('../index.html');
     //await indexFH.writeFile(output.join(''));
     await writeFile('../index.html', output.join('\n'));
+  }
+
+  private generateList(nodes: LinkNode[]): string[] {
+    let result = new Array<string>();
+    for (const node of nodes) {
+      result.push(
+        '<p><a href="' + node.name + '" class="link">' + node.name + '</a><p>'
+      );
+    }
+    return result;
   }
 }
 
