@@ -138,12 +138,12 @@ var IndexWriter = /** @class */ (function () {
     }
     IndexWriter.prototype.write = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var files, _i, files_1, file, output;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var files, _i, files_1, file, output, _a, files_2, file;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, this.finder.find()];
                     case 1:
-                        files = _a.sent();
+                        files = _b.sent();
                         for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
                             file = files_1[_i];
                             console.log(file);
@@ -158,6 +158,10 @@ var IndexWriter = /** @class */ (function () {
                         output.push('    <title>Course Notes</title>');
                         output.push('  </head>');
                         output.push('  <body>');
+                        for (_a = 0, files_2 = files; _a < files_2.length; _a++) {
+                            file = files_2[_a];
+                            output.push('<p><a href="' + file + '" class="link">' + file + '</a><p>');
+                        }
                         output.push('    hello2');
                         output.push('  </body>');
                         output.push('</html>');
@@ -170,7 +174,7 @@ var IndexWriter = /** @class */ (function () {
                         // Write to the index.html file
                         //const indexFH = await open('../index.html');
                         //await indexFH.writeFile(output.join(''));
-                        _a.sent();
+                        _b.sent();
                         return [2 /*return*/];
                 }
             });

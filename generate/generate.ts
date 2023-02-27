@@ -52,6 +52,11 @@ class IndexWriter {
     output.push('    <title>Course Notes</title>');
     output.push('  </head>');
     output.push('  <body>');
+
+    for (const file of files) {
+      output.push('<p><a href="' + file + '" class="link">' + file + '</a><p>');
+    }
+
     output.push('    hello2');
     output.push('  </body>');
     output.push('</html>');
