@@ -2,7 +2,7 @@
 
 [Edit on StackBlitz ⚡️](https://stackblitz.com/edit/node-course-notes)
 
-chmod a+x \*.sh
+chmod a+x *.sh
 
 Created a new tsconfig.json with:
 TS

@@ -1,13 +1,27 @@
-import { readdir } from 'node:fs/promises';
+import { opendir } from 'node:fs/promises';
 
 class HtmlFileFinder {
-  async read(dir: string): Promise<string[]> {
+  private async read(startDir: string): Promise<string[]> {
+    let files: string[] = new Array<string>();
     try {
-      const files = await readdir(dir);
-      return files;
+      const dir = await opendir(startDir);
+      for await (const dirent of dir) {
+        const path = startDir + '/' + dirent.name;
+        // console.log(path);
+        if (dirent.name.endsWith('.html')) {
+          files.push(path);
+        }
+
+        if (dirent.isDirectory() && dirent.name != 'node_modules') {
+          const subDir = startDir + '/' + dirent.name;
+          //const subDirFiles = await this.read(subDir);
+          files = files.concat(await this.read(subDir));
+        }
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Error with OpenDir: ' + err);
     }
+    return files;
   }
 
   async find() {
@@ -18,7 +32,13 @@ class HtmlFileFinder {
   }
 }
 
-class IndexWriter {}
+class IndexWriter {
+  private finder = new HtmlFileFinder();
 
-let finder = new HtmlFileFinder();
-finder.find();
+  async write() {
+    this.finder.find();
+  }
+}
+
+let writer = new IndexWriter();
+writer.write();

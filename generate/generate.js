@@ -35,27 +35,87 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 exports.__esModule = true;
 var promises_1 = require("node:fs/promises");
 var HtmlFileFinder = /** @class */ (function () {
     function HtmlFileFinder() {
     }
-    HtmlFileFinder.prototype.read = function (dir) {
+    HtmlFileFinder.prototype.read = function (startDir) {
+        var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var files, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var files, dir, _d, dir_1, dir_1_1, dirent, path, subDir, _e, _f, e_1_1, err_1;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, (0, promises_1.readdir)(dir)];
+                        files = new Array();
+                        _g.label = 1;
                     case 1:
-                        files = _a.sent();
-                        return [2 /*return*/, files];
+                        _g.trys.push([1, 19, , 20]);
+                        return [4 /*yield*/, (0, promises_1.opendir)(startDir)];
                     case 2:
-                        err_1 = _a.sent();
-                        console.error(err_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        dir = _g.sent();
+                        _g.label = 3;
+                    case 3:
+                        _g.trys.push([3, 12, 13, 18]);
+                        _d = true, dir_1 = __asyncValues(dir);
+                        _g.label = 4;
+                    case 4: return [4 /*yield*/, dir_1.next()];
+                    case 5:
+                        if (!(dir_1_1 = _g.sent(), _a = dir_1_1.done, !_a)) return [3 /*break*/, 11];
+                        _c = dir_1_1.value;
+                        _d = false;
+                        _g.label = 6;
+                    case 6:
+                        _g.trys.push([6, , 9, 10]);
+                        dirent = _c;
+                        path = startDir + '/' + dirent.name;
+                        // console.log(path);
+                        if (dirent.name.endsWith('.html')) {
+                            files.push(path);
+                        }
+                        if (!(dirent.isDirectory() && dirent.name != 'node_modules')) return [3 /*break*/, 8];
+                        subDir = startDir + '/' + dirent.name;
+                        _f = (_e = files).concat;
+                        return [4 /*yield*/, this.read(subDir)];
+                    case 7:
+                        //const subDirFiles = await this.read(subDir);
+                        files = _f.apply(_e, [_g.sent()]);
+                        _g.label = 8;
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
+                        _d = true;
+                        return [7 /*endfinally*/];
+                    case 10: return [3 /*break*/, 4];
+                    case 11: return [3 /*break*/, 18];
+                    case 12:
+                        e_1_1 = _g.sent();
+                        e_1 = { error: e_1_1 };
+                        return [3 /*break*/, 18];
+                    case 13:
+                        _g.trys.push([13, , 16, 17]);
+                        if (!(!_d && !_a && (_b = dir_1["return"]))) return [3 /*break*/, 15];
+                        return [4 /*yield*/, _b.call(dir_1)];
+                    case 14:
+                        _g.sent();
+                        _g.label = 15;
+                    case 15: return [3 /*break*/, 17];
+                    case 16:
+                        if (e_1) throw e_1.error;
+                        return [7 /*endfinally*/];
+                    case 17: return [7 /*endfinally*/];
+                    case 18: return [3 /*break*/, 20];
+                    case 19:
+                        err_1 = _g.sent();
+                        console.error('Error with OpenDir: ' + err_1);
+                        return [3 /*break*/, 20];
+                    case 20: return [2 /*return*/, files];
                 }
             });
         });
@@ -81,8 +141,17 @@ var HtmlFileFinder = /** @class */ (function () {
 }());
 var IndexWriter = /** @class */ (function () {
     function IndexWriter() {
+        this.finder = new HtmlFileFinder();
     }
+    IndexWriter.prototype.write = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.finder.find();
+                return [2 /*return*/];
+            });
+        });
+    };
     return IndexWriter;
 }());
-var finder = new HtmlFileFinder();
-finder.find();
+var writer = new IndexWriter();
+writer.write();
