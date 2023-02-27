@@ -122,17 +122,10 @@ var HtmlFileFinder = /** @class */ (function () {
     };
     HtmlFileFinder.prototype.find = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var files, _i, files_1, file;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.read('..')];
-                    case 1:
-                        files = _a.sent();
-                        for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
-                            file = files_1[_i];
-                            console.log(file);
-                        }
-                        return [2 /*return*/];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -145,9 +138,41 @@ var IndexWriter = /** @class */ (function () {
     }
     IndexWriter.prototype.write = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var files, _i, files_1, file, output;
             return __generator(this, function (_a) {
-                this.finder.find();
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.finder.find()];
+                    case 1:
+                        files = _a.sent();
+                        for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
+                            file = files_1[_i];
+                            console.log(file);
+                        }
+                        output = new Array();
+                        output.push('<!DOCTYPE html>');
+                        output.push('<html lang="en">');
+                        output.push('  <head>');
+                        output.push('    <meta charset="UTF-8" />');
+                        output.push('    <meta http-equiv="X-UA-Compatible" content="IE=edge" />');
+                        output.push('    <meta name="viewport" content="width=device-width, initial-scale=1.0" />');
+                        output.push('    <title>Course Notes</title>');
+                        output.push('  </head>');
+                        output.push('  <body>');
+                        output.push('    hello2');
+                        output.push('  </body>');
+                        output.push('</html>');
+                        console.log(output);
+                        // Write to the index.html file
+                        //const indexFH = await open('../index.html');
+                        //await indexFH.writeFile(output.join(''));
+                        return [4 /*yield*/, (0, promises_1.writeFile)('../index.html', output.join('\n'))];
+                    case 2:
+                        // Write to the index.html file
+                        //const indexFH = await open('../index.html');
+                        //await indexFH.writeFile(output.join(''));
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };
