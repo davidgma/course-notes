@@ -45,16 +45,21 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 exports.__esModule = true;
 var promises_1 = require("node:fs/promises");
 var LinkNode = /** @class */ (function () {
-    function LinkNode(name) {
+    function LinkNode(name, link, directory, level) {
         this.name = name;
+        this.link = link;
+        this.directory = directory;
+        this.level = level;
     }
     return LinkNode;
 }());
 var HtmlFileFinder = /** @class */ (function () {
     function HtmlFileFinder() {
     }
-    HtmlFileFinder.prototype.read = function (startDir) {
+    HtmlFileFinder.prototype.read = function (startDir, dirName, level) {
         var _a, e_1, _b, _c;
+        if (dirName === void 0) { dirName = '/'; }
+        if (level === void 0) { level = 0; }
         return __awaiter(this, void 0, void 0, function () {
             var files, dir, _d, dir_1, dir_1_1, dirent, path, subDir, _e, _f, e_1_1, err_1;
             return __generator(this, function (_g) {
@@ -83,12 +88,13 @@ var HtmlFileFinder = /** @class */ (function () {
                         dirent = _c;
                         path = startDir + '/' + dirent.name;
                         if (dirent.name.endsWith('.html')) {
-                            files.push(new LinkNode(path));
+                            files.push(new LinkNode(dirent.name, path, dirName, level));
                         }
                         if (!(dirent.isDirectory() && dirent.name != 'node_modules')) return [3 /*break*/, 8];
+                        files.push(new LinkNode('directory', 'none', dirent.name, level));
                         subDir = startDir + '/' + dirent.name;
                         _f = (_e = files).concat;
-                        return [4 /*yield*/, this.read(subDir)];
+                        return [4 /*yield*/, this.read(subDir, dirent.name, level + 1)];
                     case 7:
                         //const subDirFiles = await this.read(subDir);
                         files = _f.apply(_e, [_g.sent()]);
@@ -168,15 +174,20 @@ var IndexWriter = /** @class */ (function () {
                         output.push('    .link {');
                         output.push('    text-decoration: none;');
                         output.push('    }');
+                        output.push('ul {');
+                        output.push('list-style-type: none; /* Remove bullets */');
+                        output.push('}');
                         output.push('');
                         output.push('</style>');
                         output.push('  </head>');
                         output.push('  <body>');
+                        output.push('  <p>');
                         for (_a = 0, _b = this.generateList(files); _a < _b.length; _a++) {
                             line = _b[_a];
                             output.push(line);
                         }
-                        output.push('    hello2');
+                        output.push('  </p>');
+                        output.push('');
                         output.push('  </body>');
                         output.push('</html>');
                         //console.log(output);
@@ -197,10 +208,45 @@ var IndexWriter = /** @class */ (function () {
     };
     IndexWriter.prototype.generateList = function (nodes) {
         var result = new Array();
+        var currentLevel = 0;
+        result.push('<ul>');
         for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
             var node = nodes_1[_i];
-            result.push('<p><a href="' + node.name + '" class="link">' + node.name + '</a><p>');
+            console.log('name: ' + node.name + ', level: ' + node.level.toString());
+            if (
+            // node.level == 0 ||
+            node.directory == 'css' ||
+                node.directory == 'images' ||
+                node.directory == 'generate') {
+            }
+            else if (node.name == 'directory') {
+                if (node.level > currentLevel) {
+                    result.push('<li>' + node.directory + '</li>');
+                    //result.push('<ul>');
+                }
+                else if (node.level < currentLevel) {
+                    result.push('</ul></ul>');
+                    result.push('<ul>');
+                    result.push('<li>' + node.directory + '</li>');
+                }
+                else {
+                    result.push('<li>' + node.directory + '</li>');
+                }
+            }
+            else {
+                if (node.level > currentLevel) {
+                    console.log('not a directory: ' + JSON.stringify(node));
+                    result.push('<ul>');
+                }
+                result.push('<li><a href="' +
+                    node.link +
+                    '" class="link">' +
+                    node.name +
+                    '</a></li>');
+            }
+            currentLevel = node.level;
         }
+        result.push('</ul>');
         return result;
     };
     return IndexWriter;
