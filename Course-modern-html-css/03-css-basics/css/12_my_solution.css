@@ -1,4 +1,6 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -6,13 +8,13 @@ body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   color: black;
-  background-color: #1452a3;
+  background-color: #344a72;
 }
 
 #main-section {
   background-color: white;
   max-width: 300px;
-  margin: auto;
+  margin: 40px auto;
   /* margin-bottom: 10px; */
   padding-top: 5px;
   padding-bottom: 5px;
@@ -40,6 +42,10 @@ form {
   color: gray;
 }
 
+button:hover {
+  background: #37a08e;
+}
+
 input {
   margin-bottom: 5%;
   width: 100%;
@@ -52,22 +58,28 @@ label {
   font-size: 11px;
 }
 
-#form-input {
+#form-button {
   display: block;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 20px;
   color: white;
-  background-color: #75c99c;
+  background-color: #49c1a2;
   border-radius: 5px;
   border-width: 0px;
-  padding: 5px;
+  padding: 10px;
   font-size: 9px;
+  cursor: pointer;
 }
 
-#disclaimer {
+#form-button:hover {
+  background: #37a08e;
+}
+
+.bottom-text {
   font-size: 9px;
   padding: 0px 15px;
   text-align: center;
+  margin-top: 20px;
 }
 
 #login {
