@@ -11,7 +11,7 @@ body {
 
 #main-section {
   background-color: white;
-  width: 60%;
+  max-width: 300px;
   margin: auto;
   /* margin-bottom: 10px; */
   padding-top: 5px;
