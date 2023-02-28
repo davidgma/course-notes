@@ -52,10 +52,7 @@ class IndexWriter {
 
   async write() {
     // Get the .html files
-    let files = await this.finder.find();
-    for (const file of files) {
-      console.log(file);
-    }
+    let nodes = await this.finder.find();
 
     // Prepare the html
     const output: Array<string> = new Array<string>();
@@ -84,7 +81,7 @@ class IndexWriter {
     output.push('  <body>');
     output.push('  <p>');
 
-    for (let line of this.generateList(files)) {
+    for (let line of this.generateList(nodes)) {
       output.push(line);
     }
 
@@ -106,7 +103,7 @@ class IndexWriter {
     let currentLevel = 0;
     result.push('<ul>');
     for (const node of nodes) {
-      console.log('name: ' + node.name + ', level: ' + node.level.toString());
+      // console.log('name: ' + node.name + ', level: ' + node.level.toString());
       if (
         // node.level == 0 ||
         node.directory == 'css' ||
@@ -125,7 +122,7 @@ class IndexWriter {
         }
       } else {
         if (node.level > currentLevel) {
-          console.log('not a directory: ' + JSON.stringify(node));
+          // console.log('not a directory: ' + JSON.stringify(node));
           result.push('<ul>');
         }
         result.push(

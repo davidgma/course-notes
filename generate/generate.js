@@ -149,16 +149,12 @@ var IndexWriter = /** @class */ (function () {
     }
     IndexWriter.prototype.write = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var files, _i, files_1, file, output, _a, _b, line;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var nodes, output, _i, _a, line;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, this.finder.find()];
                     case 1:
-                        files = _c.sent();
-                        for (_i = 0, files_1 = files; _i < files_1.length; _i++) {
-                            file = files_1[_i];
-                            console.log(file);
-                        }
+                        nodes = _b.sent();
                         output = new Array();
                         output.push('<!DOCTYPE html>');
                         output.push('<html lang="en">');
@@ -182,8 +178,8 @@ var IndexWriter = /** @class */ (function () {
                         output.push('  </head>');
                         output.push('  <body>');
                         output.push('  <p>');
-                        for (_a = 0, _b = this.generateList(files); _a < _b.length; _a++) {
-                            line = _b[_a];
+                        for (_i = 0, _a = this.generateList(nodes); _i < _a.length; _i++) {
+                            line = _a[_i];
                             output.push(line);
                         }
                         output.push('  </p>');
@@ -200,7 +196,7 @@ var IndexWriter = /** @class */ (function () {
                         // Write to the index.html file
                         //const indexFH = await open('../index.html');
                         //await indexFH.writeFile(output.join(''));
-                        _c.sent();
+                        _b.sent();
                         return [2 /*return*/];
                 }
             });
@@ -212,7 +208,7 @@ var IndexWriter = /** @class */ (function () {
         result.push('<ul>');
         for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
             var node = nodes_1[_i];
-            console.log('name: ' + node.name + ', level: ' + node.level.toString());
+            // console.log('name: ' + node.name + ', level: ' + node.level.toString());
             if (
             // node.level == 0 ||
             node.directory == 'css' ||
@@ -234,7 +230,7 @@ var IndexWriter = /** @class */ (function () {
             }
             else {
                 if (node.level > currentLevel) {
-                    console.log('not a directory: ' + JSON.stringify(node));
+                    // console.log('not a directory: ' + JSON.stringify(node));
                     result.push('<ul>');
                 }
                 result.push('<li><a href="' +
