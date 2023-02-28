@@ -222,7 +222,6 @@ var IndexWriter = /** @class */ (function () {
             else if (node.name == 'directory') {
                 if (node.level > currentLevel) {
                     result.push('<li>' + node.directory + '</li>');
-                    //result.push('<ul>');
                 }
                 else if (node.level < currentLevel) {
                     result.push('</ul></ul>');
