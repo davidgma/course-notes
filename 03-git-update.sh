@@ -17,9 +17,9 @@ fi
 echo $message
 
 # Send master files to github
-git checkout master
+git checkout main
 git add *
 git commit -a -m "${message}"
-git push origin master
+git push origin main
 
 # https://davidgma.github.io/identity-services-demo
